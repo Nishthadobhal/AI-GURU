@@ -16,3 +16,18 @@ def create_student(db: Session, student: StudentCreate):
     db.refresh(db_student)
 
     return db_student
+
+def get_student(db:Session,student_id:int):
+    return db.query(Student).filter(
+        Student.id==student_id
+    ).first()
+
+def get_student_learning_events(
+    db: Session,
+    student_id: int
+):
+    student = db.query(Student).filter(
+        Student.id == student_id
+    ).first()
+
+    return student.learning_events
