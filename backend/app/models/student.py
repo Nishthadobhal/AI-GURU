@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -10,3 +11,8 @@ class Student(Base):
     name = Column(String, nullable=False)
     goal = Column(String, nullable=False)
     learning_style = Column(String, nullable=False)
+
+    learning_events = relationship(
+        "LearningEvent",
+        back_populates="student"
+    )
