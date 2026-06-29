@@ -22,3 +22,13 @@ def create_learning_event(
     db.refresh(db_learning_event)
 
     return db_learning_event
+
+def get_learning_events_by_student(
+    db: Session,
+    student_id: int
+):
+    return (
+        db.query(LearningEvent)
+        .filter(LearningEvent.student_id == student_id)
+        .all()
+    )

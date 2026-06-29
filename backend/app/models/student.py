@@ -16,3 +16,9 @@ class Student(Base):
         "LearningEvent",
         back_populates="student"
     )
+
+    learner_state = relationship(
+       "LearnerState",
+       back_populates="student",
+       uselist=False
+    )
