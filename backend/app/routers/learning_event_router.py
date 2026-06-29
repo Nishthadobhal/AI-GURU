@@ -25,7 +25,7 @@ def get_learning_events(
     student_id: int,
     db: Session = Depends(get_db)
 ):
-    return get_student_learning_events(
+    return get_learning_events_by_student(
         db,
         student_id
     )
