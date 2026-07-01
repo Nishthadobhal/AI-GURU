@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 
 from app.models.learning_event import LearningEvent
 from app.schemas.learning_event import LearningEventCreate
-from app.services.learner_state_service import update_learner_state
+from app.services.pipeline_service import process_learning_update
+
 
 def create_learning_event(
     db: Session,
@@ -20,13 +21,15 @@ def create_learning_event(
     db.add(db_learning_event)
     db.commit()
     db.refresh(db_learning_event)
-    
-    update_learner_state(
-    db,
-    learning_event.student_id
-) 
-    
+
+    # Trigger AI pipeline
+    process_learning_update(
+        db,
+        learning_event.student_id
+    )
+
     return db_learning_event
+
 
 def get_learning_events_by_student(
     db: Session,
