@@ -22,3 +22,8 @@ class Student(Base):
        back_populates="student",
        uselist=False
     )
+    profile = relationship(
+    "StudentProfile",
+    back_populates="student",
+    uselist=False
+)
