@@ -10,12 +10,16 @@ from app.routers.learning_event_router import (
 from app.routers.learner_state_router import (
     router as learner_state_router
 )
+from app.routers.student_profile_router import router as student_profile_router
+from app.routers.learning_goal_router import router as learning_goal_router
 
 app = FastAPI()
 app.include_router(student_router)
 app.include_router(learning_event_router)
 app.include_router(learner_state_router)
 app.include_router(analytics_router)
+app.include_router(student_profile_router)
+app.include_router(learning_goal_router)
 
 @app.get("/")
 def home():

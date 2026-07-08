@@ -27,3 +27,7 @@ class Student(Base):
     back_populates="student",
     uselist=False
 )
+    learning_goals = relationship(
+    "LearningGoal",
+    back_populates="student"
+)
