@@ -38,3 +38,7 @@ class LearningGoal(Base):
         "Student",
         back_populates="learning_goals"
     )
+    roadmaps = relationship(
+    "Roadmap",
+    back_populates="learning_goal"
+)
