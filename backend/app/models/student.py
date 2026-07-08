@@ -31,3 +31,7 @@ class Student(Base):
     "LearningGoal",
     back_populates="student"
 )
+    learning_sessions = relationship(
+    "LearningSession",
+    back_populates="student"
+)
