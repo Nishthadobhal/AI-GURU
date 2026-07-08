@@ -6,6 +6,11 @@ from app.models.learning_goal import LearningGoal
 from app.models.roadmap import Roadmap
 from app.models.roadmap_topic import RoadmapTopic
 from app.models.learning_session import LearningSession
+from app.models.quiz import Quiz
+
+from app.models.question import Question
+
+from app.models.quiz_attempt import QuizAttempt
 
 print("Creating tables...")
 

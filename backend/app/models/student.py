@@ -35,3 +35,7 @@ class Student(Base):
     "LearningSession",
     back_populates="student"
 )
+    quiz_attempts = relationship(
+    "QuizAttempt",
+    back_populates="student"
+)
