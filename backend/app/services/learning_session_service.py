@@ -7,7 +7,7 @@ from app.schemas.learning_event import LearningEventCreate
 from app.services.learning_event_service import (
     create_learning_event
 )
-
+from app.models.roadmap_topic import RoadmapTopic
 
 def create_learning_session(
     db: Session,
@@ -30,12 +30,19 @@ def create_learning_session(
 
 
     if data.completed:
+        topic = (
+    db.query(RoadmapTopic)
+    .filter(
+        RoadmapTopic.id == data.topic_id
+    )
+    .first()
+)
 
         event = LearningEventCreate(
 
             student_id=data.student_id,
 
-            topic="Roadmap Topic",
+            topic=topic.topic_name,
 
             duration_minutes=data.duration_minutes,
 

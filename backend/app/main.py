@@ -19,6 +19,9 @@ from app.routers.learning_session_router import (
 from app.routers.quiz_attempt_router import (
     router as quiz_attempt_router
 )
+from app.routers.quiz_router import (
+    router as quiz_router
+)
 app = FastAPI()
 app.include_router(student_router)
 app.include_router(learning_event_router)
@@ -29,6 +32,9 @@ app.include_router(learning_goal_router)
 app.include_router(roadmap_router)
 app.include_router(learning_session_router)
 app.include_router(quiz_attempt_router)
+app.include_router(
+    quiz_router
+)
 
 @app.get("/")
 def home():

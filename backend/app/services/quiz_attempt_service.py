@@ -2,6 +2,10 @@ from sqlalchemy.orm import Session
 
 from app.models.quiz_attempt import QuizAttempt
 
+from app.models.quiz import Quiz
+
+from app.models.roadmap_topic import RoadmapTopic
+
 from app.schemas.learning_event import LearningEventCreate
 
 from app.services.learning_event_service import (
@@ -29,10 +33,29 @@ def create_quiz_attempt(
     db.refresh(attempt)
 
 
+    quiz = (
+        db.query(Quiz)
+        .filter(
+            Quiz.id == data.quiz_id
+        )
+        .first()
+    )
+
+
+    topic = (
+        db.query(RoadmapTopic)
+        .filter(
+            RoadmapTopic.id == quiz.topic_id
+        )
+        .first()
+    )
+
+
     event = LearningEventCreate(
+
         student_id=data.student_id,
 
-        topic="Quiz Topic",
+        topic=topic.topic_name,
 
         duration_minutes=data.time_taken_minutes,
 
@@ -41,6 +64,7 @@ def create_quiz_attempt(
         revision=False,
 
         notes="Generated from quiz attempt"
+
     )
 
 
