@@ -1,44 +1,71 @@
 from app.models.learning_event import LearningEvent
 
+def build_feature_vector(events):
 
-def build_feature_vector(events: list[LearningEvent]):
-    total_sessions = len(events)
+    if len(events) == 0:
 
-    total_study_time = 0
-    total_quiz_score = 0
+        return {
+            "average_score": 0,
+            "total_time": 0,
+            "consistency": 0,
+            "revision_count": 0,
+            "activity_count": 0
+        }
+
+
+    total_score = 0
+
+    total_time = 0
+
     revision_count = 0
 
-    for event in events:
-        total_study_time += event.duration_minutes
 
-        if event.quiz_score is not None:
-            total_quiz_score += event.quiz_score
+    for event in events:
+
+
+        total_score += event.quiz_score
+
+
+        total_time += event.duration_minutes
+
 
         if event.revision:
+
             revision_count += 1
 
-    average_quiz_score = (
-        total_quiz_score / total_sessions
-        if total_sessions > 0
-        else 0
+
+
+    average_score = (
+        total_score / len(events)
     )
 
-    revision_rate = (
-        revision_count / total_sessions
-        if total_sessions > 0
-        else 0
+
+    consistency = min(
+        len(events) / 10,
+        1
     )
 
-    average_time = (
-        total_study_time / total_sessions
-        if total_sessions > 0
-        else 0
-    )
 
     return {
-        "total_sessions": total_sessions,
-        "total_study_time": total_study_time,
-        "average_time": average_time,
-        "average_quiz_score": average_quiz_score,
-        "revision_rate": revision_rate
+
+        "average_score": average_score / 100,
+
+
+        "total_time": min(
+            total_time / 500,
+            1
+        ),
+
+
+        "revision_count": min(
+            revision_count / 10,
+            1
+        ),
+
+
+        "consistency": consistency,
+
+
+        "activity_count": len(events)
+
     }

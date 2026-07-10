@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Float, ForeignKey, Integer, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-
+from sqlalchemy import Float
 from app.database import Base
 
 
@@ -24,6 +24,57 @@ class LearnerState(Base):
     dharana = Column(Float, default=0.0)
 
     guna = Column(Float, default=0.0)
+     
+    sattva = Column(
+    Float,
+    default=0.0
+)
+
+    rajas = Column(
+    Float,
+    default=0.0
+)
+
+    tamas = Column(
+    Float,
+    default=0.0
+)
+
+
+    shila = Column(
+    Float,
+    default=0.0
+)
+
+
+    karma = Column(
+    Float,
+    default=0.0
+)
+
+
+    manasika = Column(
+    Float,
+    default=0.0
+)
+
+
+    viveka = Column(
+    Float,
+    default=0.0
+)
+
+
+    ruchi = Column(
+    Float,
+    default=0.0
+)
+
+
+    adaptability = Column(
+    Float,
+    default=0.0
+)
 
     updated_at = Column(
         DateTime(timezone=True),

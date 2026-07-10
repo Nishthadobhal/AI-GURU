@@ -11,12 +11,30 @@ from app.schemas.learning_event import LearningEventCreate
 from app.services.learning_event_service import (
     create_learning_event
 )
+from fastapi import HTTPException
 
+from app.models.student import Student
 
 def create_quiz_attempt(
     db: Session,
     data
 ):
+    
+    student = (
+    db.query(Student)
+    .filter(
+        Student.id == data.student_id
+    )
+    .first()
+)
+
+
+    if not student:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+    )
 
     attempt = QuizAttempt(
         student_id=data.student_id,

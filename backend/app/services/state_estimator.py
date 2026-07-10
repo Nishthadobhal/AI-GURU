@@ -1,33 +1,120 @@
 def estimate_state(features):
 
-    average_quiz = features["average_quiz_score"]
-    average_time = features["average_time"]
-    revision_rate = features["revision_rate"]
 
-    # Buddhi (Understanding)
-    buddhi = average_quiz / 100
+    buddhi = features["average_score"]
 
-    # Smriti (Retention)
-    smriti = revision_rate
 
-    # Dharana (Focus)
-    if average_time >= 90:
-        dharana = 1.0
-    elif average_time >= 45:
-        dharana = 0.7
-    else:
-        dharana = 0.4
+    smriti = features["revision_count"]
 
-    # Guna (Temporary MVP Score)
-    guna = (
-        buddhi +
-        smriti +
+
+    dharana = features["total_time"]
+
+
+    shila = features["consistency"]
+
+
+    karma = min(
+        features["activity_count"] / 20,
+        1
+    )
+
+
+    viveka = (
+        buddhi
+        +
+        shila
+    ) / 2
+
+
+    manasika = (
         dharana
+        +
+        shila
+    ) / 2
+
+
+    adaptability = (
+        buddhi
+        +
+        karma
+    ) / 2
+
+
+    ruchi = (
+        features["activity_count"] / 10
+    )
+
+    if ruchi > 1:
+        ruchi = 1
+
+
+    # Guna estimation
+
+    sattva = (
+        buddhi
+        +
+        shila
+        +
+        viveka
     ) / 3
 
+
+    rajas = (
+        karma
+        +
+        adaptability
+    ) / 2
+
+
+    tamas = 1 - (
+        (sattva + rajas) / 2
+    )
+
+
+    if sattva >= rajas and sattva >= tamas:
+
+        guna = "sattva"
+
+
+    elif rajas >= sattva and rajas >= tamas:
+
+        guna = "rajas"
+
+
+    else:
+
+        guna = "tamas"
+
+
+
     return {
-        "buddhi": round(buddhi, 2),
-        "smriti": round(smriti, 2),
-        "dharana": round(dharana, 2),
-        "guna": round(guna, 2)
+
+        "buddhi": buddhi,
+
+        "smriti": smriti,
+
+        "dharana": dharana,
+
+        "guna": guna,
+
+
+        "sattva": sattva,
+
+        "rajas": rajas,
+
+        "tamas": tamas,
+
+
+        "shila": shila,
+
+        "karma": karma,
+
+        "manasika": manasika,
+
+        "viveka": viveka,
+
+        "ruchi": ruchi,
+
+        "adaptability": adaptability
+
     }

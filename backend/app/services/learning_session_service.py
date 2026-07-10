@@ -1,18 +1,58 @@
 from sqlalchemy.orm import Session
 
+from fastapi import HTTPException
+
 from app.models.learning_session import LearningSession
+
+from app.models.student import Student
+
+from app.models.roadmap_topic import RoadmapTopic
 
 from app.schemas.learning_event import LearningEventCreate
 
 from app.services.learning_event_service import (
     create_learning_event
 )
-from app.models.roadmap_topic import RoadmapTopic
+
 
 def create_learning_session(
     db: Session,
     data
 ):
+
+    student = (
+        db.query(Student)
+        .filter(
+            Student.id == data.student_id
+        )
+        .first()
+    )
+
+
+    if not student:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
+
+
+    topic = (
+        db.query(RoadmapTopic)
+        .filter(
+            RoadmapTopic.id == data.topic_id
+        )
+        .first()
+    )
+
+
+    if not topic:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Topic not found"
+        )
+
 
     session = LearningSession(
         student_id=data.student_id,
@@ -30,13 +70,6 @@ def create_learning_session(
 
 
     if data.completed:
-        topic = (
-    db.query(RoadmapTopic)
-    .filter(
-        RoadmapTopic.id == data.topic_id
-    )
-    .first()
-)
 
         event = LearningEventCreate(
 

@@ -24,28 +24,67 @@ def get_learner_state(
         .first()
     )
 
-def update_learnner_state(
-        db:Session,
-        student_id:id
+
+def update_learner_state(
+    db: Session,
+    student_id: int,
+    new_state: dict
 ):
-    events=get_learning_events_by_student(db,Session)
-    features=build_feature_vector(events)
-    state=estimate_state(features)
-    db_state=(db.query(LearnerState).filter(LearnerState.student_id==student_id).first())
-    if db_state is None:
-        db_state=LearnerState(
-            student_id=student_id,
-            buddhi=state["buddhi"],
-            smriti=state["smriti"],
-            dharana=state["dharana"],
-            guna=state["guna"]
+
+
+    state = (
+        db.query(LearnerState)
+        .filter(
+            LearnerState.student_id == student_id
         )
-        db.add(db_state)
-    else:   
-     db_state.buddhi = state["buddhi"]
-     db_state.smriti = state["smriti"]
-     db_state.dharana = state["dharana"]
-     db_state.guna = state["guna"]
+        .first()
+    )
+
+
+    if not state:
+
+
+        state = LearnerState(
+            student_id=student_id
+        )
+
+
+        db.add(state)
+
+
+
+    state.buddhi = new_state["buddhi"]
+
+    state.smriti = new_state["smriti"]
+
+    state.dharana = new_state["dharana"]
+
+    state.guna = new_state["guna"]
+
+
+    state.sattva = new_state["sattva"]
+
+    state.rajas = new_state["rajas"]
+
+    state.tamas = new_state["tamas"]
+
+
+    state.shila = new_state["shila"]
+
+    state.karma = new_state["karma"]
+
+    state.manasika = new_state["manasika"]
+
+    state.viveka = new_state["viveka"]
+
+    state.ruchi = new_state["ruchi"]
+
+    state.adaptability = new_state["adaptability"]
+
+
     db.commit()
-    db.refresh(db_state)
-    return db_state
+
+    db.refresh(state)
+
+
+    return state
