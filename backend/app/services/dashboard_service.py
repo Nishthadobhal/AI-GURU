@@ -57,14 +57,15 @@ def get_dashboard(
     )
         .all()
 )
+    
+    completed_topic_ids = {
+    session.topic_id
+    for session in sessions
+    if session.completed
+}
 
+    completed_topics = len(completed_topic_ids)
 
-    completed_topics = len(
-        [
-           s for s in sessions
-           if s.completed
-        ]
-)
 
 
     total_topics = (
@@ -88,16 +89,40 @@ def get_dashboard(
             + state.dharana
         ) / 3
 
-
         recommendation = next_best_action(
-            {
-                "buddhi": state.buddhi,
-                "smriti": state.smriti,
-                "dharana": state.dharana,
-                "guna": state.guna
-            },
-            readiness
-        )
+    {
+        "buddhi": state.buddhi,
+
+        "smriti": state.smriti,
+
+        "dharana": state.dharana,
+
+        "guna": state.guna,
+
+
+        "sattva": state.sattva,
+
+        "rajas": state.rajas,
+
+        "tamas": state.tamas,
+
+
+        "shila": state.shila,
+
+        "karma": state.karma,
+
+        "manasika": state.manasika,
+
+        "viveka": state.viveka,
+
+        "ruchi": state.ruchi,
+
+        "adaptability": state.adaptability
+    },
+
+    readiness
+)
+
 
 
     else:

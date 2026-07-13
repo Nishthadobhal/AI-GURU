@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy import Float
 from app.database import Base
-
+from sqlalchemy import String
 
 class LearnerState(Base):
     __tablename__ = "learner_states"
@@ -23,7 +23,7 @@ class LearnerState(Base):
 
     dharana = Column(Float, default=0.0)
 
-    guna = Column(Float, default=0.0)
+    guna = Column(String, default="sattva")
      
     sattva = Column(
     Float,

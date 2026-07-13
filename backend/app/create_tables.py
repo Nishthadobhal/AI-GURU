@@ -7,6 +7,7 @@ from app.models.roadmap import Roadmap
 from app.models.roadmap_topic import RoadmapTopic
 from app.models.learning_session import LearningSession
 from app.models.quiz import Quiz
+from app.models.learner_state import LearnerState
 
 from app.models.question import Question
 
