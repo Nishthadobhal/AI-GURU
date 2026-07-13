@@ -25,6 +25,7 @@ from app.routers.quiz_router import (
 from app.routers.dashboard_router import (
     router as dashboard_router
 )
+from app.routers.ai_roadmap_router import router as ai_roadmap_router
 
 app = FastAPI()
 app.include_router(student_router)
@@ -42,7 +43,7 @@ app.include_router(
 app.include_router(
     dashboard_router
 )
-
+app.include_router(ai_roadmap_router)
 
 @app.get("/")
 def home():
