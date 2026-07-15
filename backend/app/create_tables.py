@@ -12,6 +12,7 @@ from app.models.learner_state import LearnerState
 from app.models.question import Question
 
 from app.models.quiz_attempt import QuizAttempt
+from app.models.conversation import Conversation
 
 print("Creating tables...")
 

@@ -39,3 +39,7 @@ class Student(Base):
     "QuizAttempt",
     back_populates="student"
 )
+    conversations = relationship(
+    "Conversation",
+    back_populates="student"
+)
