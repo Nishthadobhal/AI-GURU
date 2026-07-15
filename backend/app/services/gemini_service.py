@@ -2,15 +2,13 @@ import os
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai.errors import ServerError, ClientError
 
 load_dotenv()
 
 client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
-
-
-from google.genai.errors import ServerError
 
 
 def ask_gemini(prompt: str):
@@ -23,6 +21,11 @@ def ask_gemini(prompt: str):
 
         return response.text
 
+    except ServerError:
+        return "Gemini server is busy right now. Please try again in a few moments."
+
+    except ClientError as e:
+        return f"Gemini API Error: {e}"
+
     except Exception as e:
-        print(e)
-        raise
+        return f"Unexpected Error: {e}"
