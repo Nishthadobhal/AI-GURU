@@ -19,9 +19,9 @@ def save_conversation(
     db.refresh(conversation)
     return conversation
 
-def get_recent_conversation(
+def get_recent_conversations(
         db:Session,
-        student_id=int,
+        student_id:int,
         limit:int =5
 ):
     conversations=(

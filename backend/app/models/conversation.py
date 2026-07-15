@@ -31,6 +31,6 @@ class Conversation(Base):
         default=datetime.utcnow
     )
     student=relationship(
-        "student",
+        "Student",
         back_populates="conversations"
     )
