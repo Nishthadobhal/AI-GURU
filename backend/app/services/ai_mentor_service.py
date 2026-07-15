@@ -9,7 +9,12 @@ from app.services.prompt_builder import build_ai_prompt
 from app.services.gemini_service import ask_gemini
 
 from fastapi import HTTPException
+from app.schemas.conversation import ConversationCreate
 
+from app.services.conversation_service import (
+    save_conversation,
+    get_recent_conversations
+)
 
 def ask_ai_mentor(
     db: Session,
@@ -58,16 +63,33 @@ def ask_ai_mentor(
         student_id
     )
 
+    conversations = get_recent_conversations(
+    db,
+    student_id
+)
+
     prompt = build_ai_prompt(
         student,
         goal,
         state,
         dashboard,
+        conversations,
         question
     )
 
     answer = ask_gemini(
         prompt
+    )
+
+    conversation=ConversationCreate(
+        student_id=student_id,
+        question=question,
+        answer=answer
+    )
+
+    save_conversation(
+        db,
+        conversation
     )
 
     return answer
