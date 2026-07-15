@@ -32,7 +32,9 @@ from app.routers.student_analysis_router import (
 from app.routers.gemini_router import (
     router as gemini_router
 )
-
+from app.routers.ai_mentor_router import (
+    router as ai_mentor_router
+)
 app = FastAPI()
 app.include_router(student_router)
 app.include_router(learning_event_router)
@@ -55,6 +57,9 @@ app.include_router(
 )
 app.include_router(
     gemini_router
+)
+app.include_router(
+    ai_mentor_router
 )
 
 @app.get("/")
