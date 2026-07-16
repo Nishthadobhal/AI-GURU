@@ -1,3 +1,14 @@
+from app.prompts.general_prompt import (
+    build_general_prompt
+)
+
+from app.prompts.roadmap_prompt import (
+    build_roadmap_prompt
+)
+from app.prompts.dashboard_prompt import (
+    build_dashboard_prompt
+)
+
 def build_ai_prompt(
 
     student,
@@ -10,7 +21,9 @@ def build_ai_prompt(
 
     conversations,
 
-    question
+    question,
+
+    question_type
 
 ):
 
@@ -26,34 +39,36 @@ Answer:
 {chat.answer}
 
 """
-        
-    prompt = f"""
-You are AI-Guru, an AI mentor for engineering students.
+    if question_type == "roadmap":
 
-Student Information:
-- Name: {student.name}
-- Goal: {goal.goal_name}
-- Current Level: {goal.level}
-- Learning Readiness: {dashboard["readiness"]}
+        return build_roadmap_prompt(
+           student,
+           goal,
+           dashboard,
+           history,
+           question
+    )
 
-Learning Progress:
-- Completed Topics: {dashboard["completed_topics"]}
-- Weak Topics: {", ".join(dashboard["weak_topics"])}
+    elif question_type == "dashboard":
 
-Previous Conversations:
-{history}
+       return build_dashboard_prompt(
+           student,
+           goal,
+           state,
+           dashboard,
+           history,
+           question
+    )
 
-Current Question:
-{question}
+    return build_general_prompt(
+       student,
+       goal,
+       state,
+       dashboard,
+       history,
+       question
+)    
 
-Instructions:
 
-1. Give personalized answers based on the student's progress.
-2. Explain concepts in simple language.
-3. If the student asks a programming question, include an example.
-4. If the student is weak in a topic, mention it naturally and suggest how to improve.
-5. Give practical advice instead of generic motivation.
-6. Use bullet points whenever possible.
-7. End every answer with one small practice task.
-8. Keep the answer under 300 words unless a detailed explanation is requested.
-"""    
+
+    

@@ -35,27 +35,37 @@ def ask_ai_mentor(
     )
 
     question_type = classify_question(
-    question
-)
+        question
+    )
+
+    print("Question Type:", question_type)
+
+    print("Dashboard =", context["dashboard"])
     print(
-    "Question Type:",
-    question_type
-)
+        "Completed Topics =",
+        context["dashboard"].get("completed_topics")
+    )
+    print(
+        "Completed Type =",
+        type(context["dashboard"].get("completed_topics"))
+    )
+    print(
+        "Weak Topics =",
+        context["dashboard"].get("weak_topics")
+    )
+    print(
+        "Weak Type =",
+        type(context["dashboard"].get("weak_topics"))
+    )
 
     prompt = build_ai_prompt(
-
         context["student"],
-
         context["goal"],
-
         context["state"],
-
         context["dashboard"],
-
         context["conversations"],
-
-        question
-
+        question,
+        question_type
     )
 
     answer = ask_gemini(
