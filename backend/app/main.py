@@ -35,6 +35,7 @@ from app.routers.gemini_router import (
 from app.routers.ai_mentor_router import (
     router as ai_mentor_router
 )
+from app.routes import question
 app = FastAPI()
 app.include_router(student_router)
 app.include_router(learning_event_router)
@@ -61,6 +62,7 @@ app.include_router(
 app.include_router(
     ai_mentor_router
 )
+app.include_router(question.router)
 
 @app.get("/")
 def home():

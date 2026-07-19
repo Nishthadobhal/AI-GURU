@@ -23,3 +23,32 @@ def create_quiz(
 
 
     return quiz
+
+from app.models.roadmap_topic import RoadmapTopic
+
+
+def get_quizzes_by_topic(
+    db: Session,
+    topic_id: int
+):
+
+    topic = (
+        db.query(RoadmapTopic)
+        .filter(
+            RoadmapTopic.id == topic_id
+        )
+        .first()
+    )
+
+    if not topic:
+        return []
+
+    quizzes = (
+        db.query(Quiz)
+        .filter(
+            Quiz.topic_id == topic_id
+        )
+        .all()
+    )
+
+    return quizzes
