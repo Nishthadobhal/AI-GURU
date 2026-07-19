@@ -92,6 +92,11 @@ def create_learning_session(
             db,
             event
         )
+        topic.completed = True
+
+        db.commit()
+
+        db.refresh(topic)
 
 
     return session

@@ -2,8 +2,9 @@ from sqlalchemy.orm import Session
 
 from app.models.learner_state import LearnerState
 from app.models.learning_event import LearningEvent
-from app.models.learning_session import LearningSession
 from app.models.roadmap_topic import RoadmapTopic
+from app.models.learning_goal import LearningGoal
+from app.models.roadmap import Roadmap
 
 from app.services.recommendation_service import (
     next_best_action
@@ -34,49 +35,61 @@ def get_dashboard(
     weak_topics = []
 
     for event in events:
-
         if event.quiz_score < 50:
             weak_topics.append(event.topic)
 
     weak_topics = list(set(weak_topics))
 
-    sessions = (
-        db.query(LearningSession)
+    # -----------------------------
+    # Student Roadmap Progress
+    # -----------------------------
+
+    goal = (
+        db.query(LearningGoal)
         .filter(
-            LearningSession.student_id == student_id
+            LearningGoal.student_id == student_id
         )
-        .all()
+        .first()
     )
 
-    completed_topic_ids = {
-        session.topic_id
-        for session in sessions
-        if session.completed
-    }
+    roadmap = None
+    roadmap_topics = []
 
-    completed_topic_objects = (
-        db.query(RoadmapTopic)
-        .filter(
-            RoadmapTopic.id.in_(completed_topic_ids)
+    if goal:
+        roadmap = (
+            db.query(Roadmap)
+            .filter(
+                Roadmap.learning_goal_id == goal.id
+            )
+            .first()
         )
-        .all()
-    )
+
+    if roadmap:
+        roadmap_topics = (
+            db.query(RoadmapTopic)
+            .filter(
+                RoadmapTopic.roadmap_id == roadmap.id
+            )
+            .all()
+        )
 
     completed_topics = [
         topic.topic_name
-        for topic in completed_topic_objects
+        for topic in roadmap_topics
+        if topic.completed
     ]
 
-    total_topics = (
-        db.query(RoadmapTopic)
-        .count()
-    )
+    total_topics = len(roadmap_topics)
 
     progress = (
         len(completed_topics) / total_topics
         if total_topics > 0
         else 0
     )
+
+    # -----------------------------
+    # Readiness
+    # -----------------------------
 
     if state:
 

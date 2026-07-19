@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from app.models.student import Student
 from app.models.learning_goal import LearningGoal
@@ -8,8 +9,9 @@ from app.services.dashboard_service import get_dashboard
 from app.services.conversation_service import (
     get_recent_conversations
 )
-
-from fastapi import HTTPException
+from app.services.roadmap_service import (
+    get_student_roadmap
+)
 
 
 def get_student_context(
@@ -58,6 +60,11 @@ def get_student_context(
         student_id
     )
 
+    roadmap = get_student_roadmap(
+        db,
+        student_id
+    )
+
     conversations = get_recent_conversations(
         db,
         student_id
@@ -68,5 +75,6 @@ def get_student_context(
         "goal": goal,
         "state": state,
         "dashboard": dashboard,
+        "roadmap": roadmap,
         "conversations": conversations
     }

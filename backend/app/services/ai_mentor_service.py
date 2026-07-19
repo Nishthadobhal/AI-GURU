@@ -63,6 +63,7 @@ def ask_ai_mentor(
         context["goal"],
         context["state"],
         context["dashboard"],
+        context["roadmap"],  
         context["conversations"],
         question,
         question_type

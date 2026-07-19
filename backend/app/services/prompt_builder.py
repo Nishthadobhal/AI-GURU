@@ -18,6 +18,7 @@ def build_ai_prompt(
     state,
 
     dashboard,
+    roadmap,
 
     conversations,
 
@@ -45,6 +46,7 @@ Answer:
            student,
            goal,
            dashboard,
+           roadmap,
            history,
            question
     )
@@ -56,6 +58,7 @@ Answer:
            goal,
            state,
            dashboard,
+           roadmap,
            history,
            question
     )
@@ -65,6 +68,7 @@ Answer:
        goal,
        state,
        dashboard,
+       roadmap,
        history,
        question
 )    
