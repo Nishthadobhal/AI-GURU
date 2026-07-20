@@ -43,3 +43,21 @@ def create_question(
     db.refresh(question)
 
     return question
+
+from app.models.question import Question
+
+
+def get_questions_by_quiz(
+    db: Session,
+    quiz_id: int
+):
+
+    questions = (
+        db.query(Question)
+        .filter(
+            Question.quiz_id == quiz_id
+        )
+        .all()
+    )
+
+    return questions

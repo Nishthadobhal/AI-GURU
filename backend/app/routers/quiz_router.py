@@ -20,6 +20,14 @@ from app.services.quiz_service import (
 from typing import List
 
 from app.schemas.quiz import QuizResponse
+from app.schemas.quiz_submission import (
+    QuizSubmission,
+    QuizSubmissionResponse,
+)
+
+from app.services.quiz_service import (
+    submit_quiz,
+)
 
 router = APIRouter(
     prefix="/quizzes",
@@ -54,3 +62,22 @@ def get_topic_quizzes(
         db,
         topic_id
     )
+
+@router.post(
+    "/quizzes/submit",
+    response_model=QuizSubmissionResponse
+)
+def submit_student_quiz(
+    data: QuizSubmission,
+    db: Session = Depends(get_db)
+):
+
+    result = submit_quiz(db, data)
+
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Quiz not found or has no questions."
+        )
+
+    return result

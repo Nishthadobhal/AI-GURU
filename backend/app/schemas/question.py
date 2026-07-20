@@ -38,3 +38,21 @@ class QuestionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class QuestionForQuiz(BaseModel):
+
+    id: int
+
+    question_text: str
+
+    option_a: str
+
+    option_b: str
+
+    option_c: str
+
+    option_d: str
+
+    class Config:
+        from_attributes = True
