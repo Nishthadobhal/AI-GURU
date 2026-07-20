@@ -38,7 +38,9 @@ from app.routers.ai_mentor_router import (
 from app.routers.question import (
     router as question_router
 )
-
+from app.routers.ai_quiz_router import (
+    router as ai_quiz_router
+)
 app = FastAPI()
 app.include_router(student_router)
 app.include_router(learning_event_router)
@@ -66,7 +68,9 @@ app.include_router(
     ai_mentor_router
 )
 app.include_router(question_router)
-
+app.include_router(
+    ai_quiz_router
+)
 @app.get("/")
 def home():
     return {"message": "AI Guru Backend Running"}
