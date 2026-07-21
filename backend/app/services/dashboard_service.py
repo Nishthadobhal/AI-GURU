@@ -9,7 +9,9 @@ from app.models.roadmap import Roadmap
 from app.services.recommendation_service import (
     next_best_action
 )
-
+from app.services.weak_topic_service import (
+    get_weak_topics,
+)
 
 def get_dashboard(
     db: Session,
@@ -32,14 +34,14 @@ def get_dashboard(
         .all()
     )
 
-    weak_topics = []
+    weak_topic_data = get_weak_topics(
+    db,
+    student_id
+)
 
-    for event in events:
-        if event.quiz_score < 50:
-            weak_topics.append(event.topic)
-
-    weak_topics = list(set(weak_topics))
-
+    weak_topics = weak_topic_data["weak_topics"]
+  
+  
     # -----------------------------
     # Student Roadmap Progress
     # -----------------------------

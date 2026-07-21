@@ -41,6 +41,15 @@ from app.routers.question import (
 from app.routers.ai_quiz_router import (
     router as ai_quiz_router
 )
+from app.routers.quiz_attempt_history_router import (
+    router as quiz_attempt_history_router
+)
+from app.routers.weak_topic_router import (
+    router as weak_topic_router
+)
+
+
+
 app = FastAPI()
 app.include_router(student_router)
 app.include_router(learning_event_router)
@@ -70,6 +79,12 @@ app.include_router(
 app.include_router(question_router)
 app.include_router(
     ai_quiz_router
+)
+app.include_router(
+    quiz_attempt_history_router
+)
+app.include_router(
+    weak_topic_router
 )
 @app.get("/")
 def home():
