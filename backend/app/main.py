@@ -47,7 +47,9 @@ from app.routers.quiz_attempt_history_router import (
 from app.routers.weak_topic_router import (
     router as weak_topic_router
 )
-
+from app.routers.revision_plan_router import (
+    router as revision_plan_router
+)
 
 
 app = FastAPI()
@@ -86,6 +88,10 @@ app.include_router(
 app.include_router(
     weak_topic_router
 )
+app.include_router(
+    revision_plan_router
+)
+
 @app.get("/")
 def home():
     return {"message": "AI Guru Backend Running"}
