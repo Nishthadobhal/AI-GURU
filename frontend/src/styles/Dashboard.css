@@ -1,0 +1,49 @@
+.dashboard{
+    width:100%;
+}
+
+.dashboard h1{
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:gray;
+    margin-bottom:30px;
+}
+
+.card-container{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+.dashboard-card{
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+
+}
+
+.dashboard-card h3{
+
+    margin-bottom:15px;
+
+}
+
+.dashboard-card p{
+
+    font-size:28px;
+
+    font-weight:bold;
+
+}
