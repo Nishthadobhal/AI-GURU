@@ -1,49 +1,144 @@
-.dashboard{
-    width:100%;
+\/* ===========================
+   Dashboard Container
+=========================== */
+
+.dashboard {
+    padding: 30px;
+    background-color: #f5f7fb;
+    min-height: 100vh;
 }
 
-.dashboard h1{
-    margin-bottom:10px;
+/* ===========================
+   Heading
+=========================== */
+
+.dashboard h1 {
+    font-size: 32px;
+    color: #222;
+    margin-bottom: 8px;
 }
 
-.subtitle{
-    color:gray;
-    margin-bottom:30px;
+.subtitle {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 30px;
 }
 
-.card-container{
+/* ===========================
+   Cards
+=========================== */
 
-    display:grid;
-
-    grid-template-columns:
-    repeat(4,1fr);
-
-    gap:20px;
-
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
 }
 
-.dashboard-card{
+/* ===========================
+   Bottom Section
+=========================== */
 
-    background:white;
-
-    border-radius:12px;
-
-    padding:20px;
-
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-
+.bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
 }
 
-.dashboard-card h3{
+/* ===========================
+   Common Box Style
+=========================== */
 
-    margin-bottom:15px;
-
+.weak-topics,
+.recommendation {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.dashboard-card p{
+/* ===========================
+   Section Headings
+=========================== */
 
-    font-size:28px;
+.weak-topics h2,
+.recommendation h2 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 22px;
+}
 
-    font-weight:bold;
+/* ===========================
+   Lists
+=========================== */
 
+.weak-topics ul,
+.recommendation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.weak-topics li,
+.recommendation li {
+    padding: 12px 0;
+    border-bottom: 1px solid #ececec;
+    color: #555;
+    font-size: 15px;
+}
+
+.weak-topics li:last-child,
+.recommendation li:last-child {
+    border-bottom: none;
+}
+
+/* ===========================
+   Loading
+=========================== */
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    font-size: 24px;
+    color: #555;
+    font-weight: 600;
+}
+
+/* ===========================
+   Error
+=========================== */
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    color: #d32f2f;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 768px) {
+
+    .dashboard {
+        padding: 20px;
+    }
+
+    .dashboard h1 {
+        font-size: 28px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    .bottom-section {
+        grid-template-columns: 1fr;
+    }
 }
