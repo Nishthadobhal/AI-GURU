@@ -20,7 +20,7 @@ function App() {
         <Route path="/revision" element={<Revision />} />
 
         <Route path="/analytics" element={<Analytics />} />
-
+ 
       </Routes>
     </BrowserRouter>
   );

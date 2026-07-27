@@ -2,18 +2,20 @@ def classify_question(question: str):
 
     question = question.lower()
 
-    if "roadmap" in question:
-
+    if any(word in question for word in [
+        "roadmap", "next topic", "learning path"
+    ]):
         return "roadmap"
 
-    elif "performance" in question or "dashboard" in question:
-
+    elif any(word in question for word in [
+        "performance", "dashboard", "progress"
+    ]):
         return "dashboard"
 
-    elif "recommend" in question or "weak" in question:
-
+    elif any(word in question for word in [
+        "recommend", "weak", "improve"
+    ]):
         return "recommendation"
 
     else:
-
         return "general"

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import List
 
 class StudentReport(BaseModel):
     features: dict
@@ -7,4 +7,4 @@ class StudentReport(BaseModel):
     consistency_score: float
     state: dict
     readiness: float
-    recommendation: str
+    recommendation: List[str]

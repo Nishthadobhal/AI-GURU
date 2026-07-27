@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers.student_router import router as student_router
 from app.routers.analytics_router import (
     router as analytics_router
@@ -53,6 +54,17 @@ from app.routers.revision_plan_router import (
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(student_router)
 app.include_router(learning_event_router)
 app.include_router(learner_state_router)

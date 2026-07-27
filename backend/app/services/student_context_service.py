@@ -24,6 +24,8 @@ def get_student_context(
         .filter(Student.id == student_id)
         .first()
     )
+    print("Student:", student)
+
 
     if not student:
         raise HTTPException(
@@ -36,11 +38,12 @@ def get_student_context(
         .filter(LearningGoal.student_id == student_id)
         .first()
     )
+    print("Goal:", goal)
 
     if not goal:
         raise HTTPException(
             status_code=404,
-            detail="Learning goal not found"
+            detail="Please choose your learning goal before using the AI Mentor."
         )
 
     state = (
@@ -48,6 +51,7 @@ def get_student_context(
         .filter(LearnerState.student_id == student_id)
         .first()
     )
+    print("State:", state)
 
     if not state:
         raise HTTPException(
