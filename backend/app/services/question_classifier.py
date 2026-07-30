@@ -12,10 +12,7 @@ def classify_question(question: str):
     ]):
         return "dashboard"
 
-    elif any(word in question for word in [
-        "recommend", "weak", "improve"
-    ]):
-        return "recommendation"
+  
 
     else:
         return "general"

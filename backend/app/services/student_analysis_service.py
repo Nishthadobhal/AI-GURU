@@ -65,6 +65,7 @@ def get_student_analysis(
         "strongest_area": strongest_area,
 
         "weakest_area": weakest_area,
+        "average_score": round(average, 2),
 
         "overall_level": overall_level
 
