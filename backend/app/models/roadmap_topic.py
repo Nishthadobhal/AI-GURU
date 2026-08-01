@@ -35,6 +35,11 @@ class RoadmapTopic(Base):
         nullable=False
     )
 
+    description = Column(
+    String,
+    nullable=True
+)
+
 
     order = Column(
         Integer

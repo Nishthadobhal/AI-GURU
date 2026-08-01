@@ -33,3 +33,18 @@ def add_roadmap(
         db,
         roadmap
     )
+
+
+from app.services.get_roadmap_service import (
+    get_student_roadmap
+)
+
+@router.get("/student/{student_id}")
+def get_roadmap(
+    student_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_student_roadmap(
+        db,
+        student_id
+    )

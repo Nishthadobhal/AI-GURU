@@ -10,4 +10,4 @@ class AIRoadmapRequest(BaseModel):
 
 class AIRoadmapResponse(BaseModel):
 
-    roadmap: list[str]
+    roadmap: dict

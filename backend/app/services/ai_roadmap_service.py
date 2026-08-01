@@ -1,12 +1,31 @@
+import json
+
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.models.student import Student
-from app.models.student_profile import StudentProfile
-from app.models.learner_state import LearnerState
 from app.models.learning_goal import LearningGoal
 from app.models.roadmap import Roadmap
 from app.models.roadmap_topic import RoadmapTopic
+
+from app.prompts.generate_roadmap_prompt import (
+    build_generate_roadmap_prompt
+)
+
+from app.services.gemini_service import ask_gemini
+
+
+def clean_json(text: str):
+
+    text = text.strip()
+
+    if text.startswith("```json"):
+        text = text.replace("```json", "", 1)
+
+    if text.endswith("```"):
+        text = text[:-3]
+
+    return text.strip()
 
 
 def generate_ai_roadmap(
@@ -16,7 +35,7 @@ def generate_ai_roadmap(
 ):
 
     # ----------------------------
-    # Student
+    # Fetch Student
     # ----------------------------
     student = (
         db.query(Student)
@@ -31,30 +50,13 @@ def generate_ai_roadmap(
         )
 
     # ----------------------------
-    # Student Profile
-    # ----------------------------
-    profile = (
-        db.query(StudentProfile)
-        .filter(StudentProfile.student_id == student_id)
-        .first()
-    )
-
-    # ----------------------------
-    # Learner State
-    # ----------------------------
-    learner_state = (
-        db.query(LearnerState)
-        .filter(LearnerState.student_id == student_id)
-        .first()
-    )
-
-    # ----------------------------
-    # Learning Goal
+    # Fetch Learning Goal
     # ----------------------------
     learning_goal = (
         db.query(LearningGoal)
         .filter(
-            LearningGoal.goal_name.ilike(f"%{goal}%")
+            LearningGoal.student_id == student_id,
+            LearningGoal.goal_name == goal
         )
         .first()
     )
@@ -62,81 +64,115 @@ def generate_ai_roadmap(
     if learning_goal is None:
         raise HTTPException(
             status_code=404,
-            detail="Learning goal not found"
+            detail="Learning Goal not found"
         )
 
     # ----------------------------
-    # Roadmap
+    # Build Prompt
     # ----------------------------
-    roadmap = (
+    prompt = build_generate_roadmap_prompt(
+        student,
+        goal
+    )
+
+    # ----------------------------
+    # Gemini Response
+    # ----------------------------
+    response = ask_gemini(prompt)
+
+    if "Gemini server is busy" in response:
+        raise HTTPException(
+            status_code=503,
+            detail="Gemini is temporarily unavailable. Please try again."
+        )
+
+    print("\n========== GEMINI RAW RESPONSE ==========\n")
+    print(response)
+    print("\n=========================================\n")
+
+    # ----------------------------
+    # Clean Response
+    # ----------------------------
+    response = clean_json(response)
+
+    # ----------------------------
+    # Parse JSON
+    # ----------------------------
+    try:
+
+        roadmap = json.loads(response)
+        print("JSON Parsed Successfully")
+
+        print("Saving Roadmap...")
+
+        print(roadmap)
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=500,
+            detail="Gemini returned invalid JSON"
+        )
+
+    # ----------------------------
+    # Delete old roadmap (optional)
+    # ----------------------------
+    old_roadmaps = (
         db.query(Roadmap)
         .filter(
             Roadmap.learning_goal_id == learning_goal.id
         )
-        .first()
-    )
-
-    if roadmap is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Roadmap not found"
-        )
-
-    # ----------------------------
-    # Topics
-    # ----------------------------
-    topics = (
-        db.query(RoadmapTopic)
-        .filter(
-            RoadmapTopic.roadmap_id == roadmap.id
-        )
-        .order_by(RoadmapTopic.id)
         .all()
     )
 
-    result = []
+    for old in old_roadmaps:
 
-    result.append(f"Goal : {goal}")
+        db.query(RoadmapTopic).filter(
+            RoadmapTopic.roadmap_id == old.id
+        ).delete()
 
-    if profile and profile.current_level:
-        result.append(
-            f"Current Level : {profile.current_level}"
+        db.delete(old)
+
+    db.commit()
+    print("Roadmap Saved Successfully")
+    # ----------------------------
+    # Save Roadmap
+    # ----------------------------
+    roadmap_db = Roadmap(
+
+        learning_goal_id=learning_goal.id,
+
+        title=roadmap["title"]
+
+    )
+
+    db.add(roadmap_db)
+
+    db.commit()
+
+    db.refresh(roadmap_db)
+
+    # ----------------------------
+    # Save Topics
+    # ----------------------------
+    for week in roadmap["weeks"]:
+
+        topic = RoadmapTopic(
+
+            roadmap_id=roadmap_db.id,
+
+            topic_name=week["topic"],
+
+            description=week["description"],
+
+            order=week["week"],
+
+            completed=False
+
         )
 
-    result.append("")
+        db.add(topic)
 
-    week = 1
-
-    for topic in topics:
-
-        result.append(
-            f"Week {week}"
-        )
-
-        result.append(
-            f"• {topic.topic_name}"
-        )
-
-        if learner_state:
-
-            if learner_state.smriti < 0.5:
-
-                result.append(
-                    "  Revision after completing this topic."
-                )
-
-            if learner_state.dharana < 0.5:
-
-                result.append(
-                    "  Study this topic in 25-minute focus sessions."
-                )
-
-        result.append("")
-
-        week += 1
-
-    result.append("Take a complete mock quiz.")
-
-    result.append("Review all weak topics.")
-
-    return result
+    db.commit()
+    print("Topics Saved Successfully")
+    return roadmap

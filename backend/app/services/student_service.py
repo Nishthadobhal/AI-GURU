@@ -31,3 +31,28 @@ def get_student_learning_events(
     ).first()
 
     return student.learning_events
+
+
+def get_student_by_name(
+    db: Session,
+    name: str
+):
+
+    return (
+        db.query(Student)
+        .filter(Student.name.ilike(name))
+        .first()
+    )
+
+
+def login_student(
+    db: Session,
+    name: str
+):
+
+    student = get_student_by_name(
+        db,
+        name
+    )
+
+    return student

@@ -107,3 +107,15 @@ app.include_router(
 @app.get("/")
 def home():
     return {"message": "AI Guru Backend Running"}
+
+from app.services.gemini_service import ask_gemini
+
+
+@app.get("/test-gemini")
+def test_gemini():
+
+    response = ask_gemini("Hello")
+
+    return {
+        "response": response
+    }
