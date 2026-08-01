@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { getRoadmap } from "../services/roadmapService";
+import { useNavigate } from "react-router-dom";
 
 function Roadmap() {
 
     const [roadmap, setRoadmap] = useState([]);
     const [title, setTitle] = useState("");
+    const navigate = useNavigate();
+
     useEffect(() => {
 
        const loadRoadmap = async () => {
@@ -352,13 +355,33 @@ loadRoadmap();
 
     <button
 
-        className="bg-[#20E3B2] text-black px-10 py-3 rounded-xl font-bold hover:scale-105 transition-all duration-300"
+    onClick={() => {
 
-    >
+        if (currentTopic) {
 
-        Continue Learning
+            navigate("/quiz", {
 
-    </button>
+                state: {
+
+                    topicId: currentTopic.id,
+
+                    topicName: currentTopic.topic
+
+                }
+
+            });
+
+        }
+
+    }}
+
+    className="bg-[#20E3B2] text-black px-10 py-3 rounded-xl font-bold hover:scale-105 transition-all duration-300"
+
+>
+
+    Continue Learning
+
+</button>
 
 </div>
         </div>

@@ -1,26 +1,109 @@
 import { NavLink } from "react-router-dom";
-import "./../styles/Sidebar.css";
 
 function Sidebar() {
-  return (
-    <div className="sidebar">
 
-      <h2 className="logo">AI Guru</h2>
+    const menu = [
 
-      <NavLink to="/">Dashboard</NavLink>
+        {
+            name: "Roadmap",
+            path: "/roadmap",
+            icon: "🗺️"
+        },
 
-      <NavLink to="/roadmap">Roadmap</NavLink>
+        {
+            name: "Quiz",
+            path: "/quiz",
+            icon: "📝"
+        },
 
-      <NavLink to="/mentor">AI Mentor</NavLink>
+        {
+            name: "AI Mentor",
+            path: "/mentor",
+            icon: "🤖"
+        },
 
-      <NavLink to="/quiz">Quiz</NavLink>
+        {
+            name: "Progress",
+            path: "/progress",
+            icon: "📈"
+        },
 
-      <NavLink to="/revision">Revision Plan</NavLink>
+        {
+            name: "Profile",
+            path: "/profile",
+            icon: "👤"
+        }
 
-      <NavLink to="/analytics">Analytics</NavLink>
+    ];
 
-    </div>
-  );
+    return (
+
+        <div className="w-64 min-h-screen bg-[#161B22] text-white p-6">
+
+            <h1 className="text-3xl font-bold mb-10">
+
+                AI Guru
+
+            </h1>
+
+            <div className="space-y-3">
+
+                {
+
+                    menu.map((item) => (
+
+                        <NavLink
+
+                            key={item.name}
+
+                            to={item.path}
+
+                            className={({ isActive }) =>
+
+                                `flex items-center gap-3 px-4 py-3 rounded-lg transition
+
+                                ${
+
+                                    isActive
+
+                                    ?
+
+                                    "bg-[#20E3B2] text-black"
+
+                                    :
+
+                                    "hover:bg-gray-800"
+
+                                }`
+
+                            }
+
+                        >
+
+                            <span>
+
+                                {item.icon}
+
+                            </span>
+
+                            <span>
+
+                                {item.name}
+
+                            </span>
+
+                        </NavLink>
+
+                    ))
+
+                }
+
+            </div>
+
+        </div>
+
+    );
+
 }
 
 export default Sidebar;

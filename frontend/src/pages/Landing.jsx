@@ -58,7 +58,7 @@ function Landing() {
       <p className="mt-6 text-gray-400">
         Already have an account?{" "}
         <span
-          onClick={() => navigate("/onboarding")}
+          onClick={() => navigate("/login")}
           className="text-[#20E3B2] cursor-pointer"
         >
           Login
