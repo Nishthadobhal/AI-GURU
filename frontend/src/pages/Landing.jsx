@@ -49,7 +49,7 @@ function Landing() {
       </div>
 
       <button
-        onClick={() => navigate("/auth")}
+        onClick={() => navigate("/onboarding")}
         className="bg-[#20E3B2] text-black px-8 py-3 rounded-lg font-semibold hover:scale-105 transition"
       >
         Get Started
@@ -58,7 +58,7 @@ function Landing() {
       <p className="mt-6 text-gray-400">
         Already have an account?{" "}
         <span
-          onClick={() => navigate("/auth")}
+          onClick={() => navigate("/onboarding")}
           className="text-[#20E3B2] cursor-pointer"
         >
           Login
