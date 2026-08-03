@@ -22,17 +22,17 @@ function Sidebar() {
             icon: "🤖"
         },
 
-        {
-            name: "Progress",
-            path: "/progress",
-            icon: "📈"
-        },
+        // {
+        //     name: "Progress",
+        //     path: "/progress",
+        //     icon: "📈"
+        // },
 
-        {
-            name: "Profile",
-            path: "/profile",
-            icon: "👤"
-        }
+        // {
+        //     name: "Profile",
+        //     path: "/profile",
+        //     icon: "👤"
+        // }
 
     ];
 
