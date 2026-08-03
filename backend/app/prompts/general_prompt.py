@@ -134,4 +134,12 @@ INSTRUCTIONS
 14. Encourage the student to ask learning-related questions instead.
 
 15. Understand and respond naturally to English, Hindi, or Hinglish. Reply in the same language that the student uses whenever possible.
+
+16. Keep responses concise and focused.
+
+17. For roadmap or study-planning questions, answer in 100–200 words unless the student explicitly asks for a detailed explanation.
+
+18. Use headings and bullet points when appropriate.
+
+19. For programming explanations, provide only one simple example unless the student asks for more.
 """

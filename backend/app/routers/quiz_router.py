@@ -64,7 +64,7 @@ def get_topic_quizzes(
     )
 
 @router.post(
-    "/quizzes/submit",
+    "/submit",
     response_model=QuizSubmissionResponse
 )
 def submit_student_quiz(

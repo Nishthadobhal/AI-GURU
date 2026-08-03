@@ -26,6 +26,11 @@ function Login() {
             student.id
         );
 
+        localStorage.setItem(
+    "student",
+    JSON.stringify(student)
+);
+
         navigate("/roadmap");
 
     } catch (error) {

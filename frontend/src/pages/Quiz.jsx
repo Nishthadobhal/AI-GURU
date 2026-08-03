@@ -1,14 +1,237 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { getRoadmap } from "../services/roadmapService";
+import {
+
+    getQuizByTopic,
+
+    submitQuiz
+
+} from "../services/quizService";
+
+import { getQuestionsByQuiz } from "../services/questionService";
 
 function Quiz() {
-    const location = useLocation();
 
-const {
-    topicId,
-    topicName
-} = location.state || {};
-    const [currentQuestion] = useState(0);
+    const location = useLocation();
+    const [startTime, setStartTime] = useState(null);
+
+    const [topicId, setTopicId] = useState(
+    location.state?.topicId || null
+);
+
+    const [topicName, setTopicName] = useState(
+    location.state?.topicName || ""
+);
+
+    console.log("Location State:", location.state);
+
+    
+
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [selectedOption, setSelectedOption] = useState(null);
+const [answers, setAnswers] = useState({});
+const [quizId, setQuizId] = useState(null);
+
+const [result, setResult] = useState(null);
+
+   const fetchCurrentTopic = async () => {
+
+       try {
+
+           const studentId = localStorage.getItem("studentId");
+
+           const roadmap = await getRoadmap(studentId);
+
+           const currentTopic = roadmap.weeks.find(
+               topic => !topic.completed
+        );
+
+            if (currentTopic) {
+
+                setTopicId(currentTopic.id);
+
+                setTopicName(currentTopic.topic);
+
+        }
+
+    }
+
+        catch (error) {
+
+            console.log(error);
+
+    }
+
+};
+    
+
+    useEffect(() => {
+
+        if (!topicId) {
+
+            fetchCurrentTopic();
+
+            return;
+
+    }
+
+        const loadQuiz = async () => {
+
+           try {
+
+               console.log("Topic ID:", topicId);
+
+               const quizzes = await getQuizByTopic(topicId);
+
+               console.log("Quizzes:", quizzes);
+
+               if (!quizzes || quizzes.length === 0) {
+
+                  alert("Quiz not found.");
+
+                  return;
+
+            }
+
+               let selectedQuiz = null;
+
+               for (const quiz of quizzes) {
+
+                   const questionList =
+                      await getQuestionsByQuiz(quiz.id);
+
+                    if (questionList.length > 0) {
+
+                        selectedQuiz = quiz;
+
+                        setQuizId(quiz.id);
+
+                        setQuestions(questionList);
+                        setStartTime(Date.now());
+
+                        break;
+
+                }
+
+            }
+
+                if (!selectedQuiz) {
+
+                    alert("No questions found.");
+
+            }
+
+        }
+
+            catch (error) {
+
+               console.log(error);
+
+        }
+
+    };
+
+     loadQuiz();
+
+}, [topicId]);
+const handleSubmit = async () => {
+
+    try {
+
+        const studentId = Number(
+            localStorage.getItem("studentId")
+        );
+        const endTime = Date.now();
+
+        const timeTaken = Math.max(
+           1,
+           Math.round((endTime - startTime) / 60000)
+);
+
+        const payload = {
+
+            student_id: studentId,
+
+            quiz_id: quizId,
+
+
+            time_taken_minutes: timeTaken,
+
+            answers: Object.entries(answers).map(
+
+                ([questionId, selectedAnswer]) => ({
+
+                    question_id: Number(questionId),
+
+                    selected_answer: selectedAnswer
+
+                })
+
+            )
+
+        };
+
+        console.log(payload);
+
+        const response = await submitQuiz(payload);
+
+        setResult(response);
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+    }
+
+};
+
+if (result) {
+
+    return (
+
+        <div className="min-h-screen bg-[#0D1117] flex items-center justify-center text-white">
+
+            <div className="bg-[#161B22] rounded-2xl p-10 text-center">
+
+                <h1 className="text-4xl font-bold">
+
+                    🎉 Quiz Completed
+
+                </h1>
+
+                <h2 className="text-5xl text-[#20E3B2] mt-6">
+
+                    {result.score.toFixed(0)}%
+
+                </h2>
+
+                <p className="mt-5 text-xl">
+
+                    Correct Answers
+
+                </p>
+
+                <p className="text-2xl mt-2">
+
+                    {result.correct_answers}
+
+                    /
+
+                    {result.total_questions}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    );
+
+}
 
     return (
 
@@ -24,7 +247,7 @@ const {
 
                 <p className="text-gray-400 mt-2">
 
-                    Test your understanding.
+                    {topicName || "Test your understanding."}
 
                 </p>
 
@@ -44,7 +267,9 @@ const {
 
                         <p className="text-gray-400">
 
-                            1 / 10
+                            {questions.length === 0
+                                ? "0 / 0"
+                                : `${currentQuestion + 1} / ${questions.length}`}
 
                         </p>
 
@@ -52,49 +277,152 @@ const {
 
                     <h3 className="text-2xl mt-8">
 
-                          {topicName}
+                        {questions.length > 0
+                            ? questions[currentQuestion]?.question_text
+                            : "🤖 AI Guru is preparing your quiz..."}
 
                     </h3>
 
                     <div className="mt-8 space-y-4">
 
-                        <button className="w-full text-left p-4 rounded-lg bg-gray-800 hover:bg-[#20E3B2] hover:text-black transition">
+                        {
 
-                            Option A
+                            questions.length > 0 &&
 
-                        </button>
+                            ["option_a", "option_b", "option_c", "option_d"].map(
 
-                        <button className="w-full text-left p-4 rounded-lg bg-gray-800 hover:bg-[#20E3B2] hover:text-black transition">
+                                (option) => (
 
-                            Option B
+                                    <button
 
-                        </button>
+                                        key={option}
 
-                        <button className="w-full text-left p-4 rounded-lg bg-gray-800 hover:bg-[#20E3B2] hover:text-black transition">
+                                       onClick={() => {
+    console.log("Clicked:", option);
+    setSelectedOption(option);
 
-                            Option C
+    setAnswers(prev => ({
 
-                        </button>
+        ...prev,
 
-                        <button className="w-full text-left p-4 rounded-lg bg-gray-800 hover:bg-[#20E3B2] hover:text-black transition">
+        [questions[currentQuestion].id]: option
 
-                            Option D
+    }));
 
-                        </button>
+}}
+
+                                        className={`
+                                            w-full
+                                            text-left
+                                            p-4
+                                            rounded-lg
+                                            transition
+
+                                            ${
+
+                                                selectedOption === option
+
+                                                    ?
+
+                                                    "bg-[#20E3B2] text-black"
+
+                                                    :
+
+                                                    "bg-gray-800 hover:bg-gray-700"
+
+                                            }
+
+                                        `}
+
+                                    >
+
+                                        {questions[currentQuestion][option]}
+
+                                    </button>
+
+                                )
+
+                            )
+
+                        }
 
                     </div>
 
                     <div className="flex justify-between mt-10">
 
-                        <button className="px-8 py-3 bg-gray-700 rounded-lg">
+                    <button
 
-                            Previous
+    onClick={() => {
 
-                        </button>
+        if (currentQuestion > 0) {
 
-                        <button className="px-8 py-3 bg-[#20E3B2] text-black rounded-lg font-bold">
+            const previousIndex = currentQuestion - 1;
 
-                            Next
+            setCurrentQuestion(previousIndex);
+
+            setSelectedOption(
+
+                answers[questions[previousIndex]?.id] || null
+
+            );
+
+        }
+
+    }}
+
+    className="px-8 py-3 bg-gray-700 rounded-lg"
+
+>
+
+    Previous
+
+</button>
+
+                        <button
+
+                            onClick={() => {
+
+    if (!selectedOption) {
+
+        alert("Please select an option.");
+
+        return;
+
+    }
+
+    if (currentQuestion === questions.length - 1) {
+
+        handleSubmit();
+
+        return;
+
+    }
+
+    const nextIndex = currentQuestion + 1;
+
+    setCurrentQuestion(nextIndex);
+
+    setSelectedOption(
+
+        answers[questions[nextIndex]?.id] || null
+
+    );
+
+}}
+
+                        >
+
+                           {
+    currentQuestion === questions.length - 1
+
+    ?
+
+    "Submit Quiz"
+
+    :
+
+    "Next"
+}
 
                         </button>
 

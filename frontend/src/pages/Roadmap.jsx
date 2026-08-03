@@ -1,46 +1,62 @@
 import { useEffect, useState } from "react";
 import { getRoadmap } from "../services/roadmapService";
 import { useNavigate } from "react-router-dom";
+import { getStudentReport } from "../services/analyticsService";
 
 function Roadmap() {
 
-    const [roadmap, setRoadmap] = useState([]);
+    const [roadmapData, setRoadmapData] = useState(null);
+
+const roadmap = roadmapData?.weeks || [];
     const [title, setTitle] = useState("");
+    
+    const [report, setReport] = useState(null);
+    console.log("REPORT DATA:", report);
     const navigate = useNavigate();
 
     useEffect(() => {
 
-       const loadRoadmap = async () => {
+    const fetchRoadmap = async () => {
 
-    try {
+        try {
 
-        const studentId = localStorage.getItem("studentId");
+            const studentId = localStorage.getItem("studentId");
 
-        if (!studentId) {
+            if (!studentId) {
 
-            return;
+                return;
 
-        }
+            }
 
-        const data = await getRoadmap(studentId);
+            const data = await getRoadmap(studentId);
+console.log(data);
+            setRoadmapData(data);
+            const reportData = await getStudentReport(studentId);
 
-        setRoadmap(data.weeks);
-        setTitle(data.title);
+setReport(reportData);
+
+        } catch (error) {
+
+    console.log("FULL ERROR:", error);
+
+    if (error.response) {
+
+        console.log("Status:", error.response.status);
+        console.log("Data:", error.response.data);
 
     }
 
-    catch (error) {
+    alert("Unable to load roadmap.");
 
-        console.log(error);
+}
 
-    }
+    };
 
-};
+  
 
-loadRoadmap();
+    fetchRoadmap();
 
-    }, []);
-
+}, []);
     const completedTopics = roadmap.filter(
         topic => topic.completed
     ).length;
@@ -87,7 +103,7 @@ loadRoadmap();
                             </p>
 
                             <h2 className="text-2xl font-bold mt-2">
-                                {title}
+                                {roadmapData?.title}
                             </h2>
 
                         </div>
@@ -328,27 +344,58 @@ loadRoadmap();
 
 <div className="max-w-5xl mx-auto px-8 mt-10">
 
-    <div className="bg-[#161B22] rounded-2xl p-6">
+<div className="bg-[#161B22] rounded-2xl p-6">
 
-        <h2 className="text-2xl font-bold mb-5">
+    <h2 className="text-2xl font-bold mb-5">
 
-            🎯 Today's Recommendation
+        🎯 Today's Recommendation
 
-        </h2>
+    </h2>
 
-        <p className="text-gray-300">
+    {
+        report?.recommendation?.length > 0 ?
 
-            Complete your current topic before moving to the next one.
+        (
 
-        </p>
+            <ul className="space-y-3 text-gray-300">
 
-        <p className="mt-4 text-[#20E3B2]">
+                {
 
-            Solve at least 5 practice questions today.
+                    report.recommendation.map(
 
-        </p>
+                        (item, index) => (
 
-    </div>
+                            <li key={index}>
+
+                                ✅ {item}
+
+                            </li>
+
+                        )
+
+                    )
+
+                }
+
+            </ul>
+
+        )
+
+        :
+
+        (
+
+            <p className="text-gray-400">
+
+                No recommendations available.
+
+            </p>
+
+        )
+
+    }
+
+</div>
 
 </div>
 <div className="flex justify-center mt-10 mb-12">
@@ -356,6 +403,7 @@ loadRoadmap();
     <button
 
     onClick={() => {
+        console.log("Current Topic:", currentTopic);
 
         if (currentTopic) {
 
@@ -371,7 +419,11 @@ loadRoadmap();
 
             });
 
-        }
+        }else {
+
+        console.log("Current Topic is NULL");
+
+    }
 
     }}
 

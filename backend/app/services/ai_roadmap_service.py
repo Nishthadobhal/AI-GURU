@@ -155,6 +155,8 @@ def generate_ai_roadmap(
     # ----------------------------
     # Save Topics
     # ----------------------------
+    saved_topics = []
+
     for week in roadmap["weeks"]:
 
         topic = RoadmapTopic(
@@ -172,7 +174,13 @@ def generate_ai_roadmap(
         )
 
         db.add(topic)
+        saved_topics.append(topic)
 
     db.commit()
+
+    
+
+
+    
     print("Topics Saved Successfully")
     return roadmap

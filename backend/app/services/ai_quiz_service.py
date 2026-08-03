@@ -24,6 +24,20 @@ def generate_quiz_from_ai(
 
     if not topic:
         return None
+
+    existing_quiz = (
+        db.query(Quiz)
+        .filter(Quiz.topic_id == topic_id)
+        .first()
+)
+
+    if existing_quiz:
+
+        return {
+            "success": True,
+            "message": "Quiz already exists.",
+            "quiz_id": existing_quiz.id
+    }
     
     prompt = f"""
 Create {number_of_questions} MCQs about {topic.topic_name}.
