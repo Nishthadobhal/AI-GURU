@@ -38,8 +38,10 @@ function AppRoutes() {
             element={<Quiz />}
           />
 
+          <Route path="/mentor" element={<Mentor />} />
+
         </Route>
-<Route path="/mentor" element={<Mentor />} />
+
 
       </Routes>
 

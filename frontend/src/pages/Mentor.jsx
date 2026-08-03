@@ -51,7 +51,7 @@ setLoading(true);
             ...prev,
             aiMessage
         ]);
-setLoading(true);  
+setLoading(false);  
     }
 
     catch (error) {
