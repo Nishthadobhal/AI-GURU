@@ -16,45 +16,59 @@ const roadmap = roadmapData?.weeks || [];
 
     useEffect(() => {
 
-    const fetchRoadmap = async () => {
+   const fetchRoadmap = async () => {
 
-        try {
+    const studentId = localStorage.getItem("studentId");
 
-            const studentId = localStorage.getItem("studentId");
+    if (!studentId) {
+        return;
+    }
 
-            if (!studentId) {
+    // Load Roadmap
+    try {
 
-                return;
+        const data = await getRoadmap(studentId);
 
-            }
+        console.log(data);
 
-            const data = await getRoadmap(studentId);
-console.log(data);
-            setRoadmapData(data);
-            const reportData = await getStudentReport(studentId);
+        setRoadmapData(data);
 
-setReport(reportData);
+    } catch (error) {
 
-        } catch (error) {
+        console.log("Roadmap Error:", error);
 
-    console.log("FULL ERROR:", error);
+        alert("Unable to load roadmap.");
 
-    if (error.response) {
-
-        console.log("Status:", error.response.status);
-        console.log("Data:", error.response.data);
+        return;
 
     }
 
-    alert("Unable to load roadmap.");
+    // Load Analytics (Optional)
+    try {
 
-}
+        const reportData = await getStudentReport(studentId);
 
-    };
+        setReport(reportData);
 
-  
+    } catch (error) {
 
-    fetchRoadmap();
+        if (error.response?.status === 404) {
+
+            console.log("No analytics available yet.");
+
+            setReport(null);
+
+        } else {
+
+            console.log("Report Error:", error);
+
+        }
+
+    }
+
+};
+
+fetchRoadmap();
 
 }, []);
     const completedTopics = roadmap.filter(
