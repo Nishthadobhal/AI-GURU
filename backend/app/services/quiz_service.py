@@ -119,24 +119,25 @@ def submit_quiz(db: Session, data):
         print("Correct :", question.correct_answer)
 
         answer_map_backend = {
-            "option_a": "A",
-            "option_b": "B",
-            "option_c": "C",
-            "option_d": "D"
+            "option_a": "a",
+            "option_b": "b",
+            "option_c": "c",
+            "option_d": "d"
 }
 
         mapped_answer = answer_map_backend.get(selected_answer)
 
+        correct_answer = question.correct_answer.lower()
+
         if (
-           selected_answer == question.correct_answer
+           selected_answer == correct_answer
            or
-           mapped_answer == question.correct_answer
+           (mapped_answer and mapped_answer.lower() == correct_answer)
 ):
            print("MATCH")
            correct_answers += 1
         else:
-            print("NOT MATCH")
-        
+           print("NOT MATCH")
 
     total_questions = len(questions)
 

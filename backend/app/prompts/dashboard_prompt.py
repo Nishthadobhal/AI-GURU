@@ -26,6 +26,17 @@ def build_dashboard_prompt(
         else "None"
     )
 
+    weak_topics = "None"
+
+    if dashboard["weak_topics"]:
+
+        weak_topics = "\n".join(
+        [
+            f'- {topic["topic"]} (Average Score: {topic["average_score"]:.2f})'
+            for topic in dashboard["weak_topics"]
+        ]
+    )
+
     return f"""
 You are AI-Guru, an intelligent AI mentor for engineering students.
 
@@ -55,7 +66,8 @@ Completed Topics:
 {", ".join(dashboard["completed_topics"]) if dashboard["completed_topics"] else "None"}
 
 Weak Topics:
-{", ".join(dashboard["weak_topics"]) if dashboard["weak_topics"] else "None"}
+{weak_topics}
+
 
 ========================
 ROADMAP
